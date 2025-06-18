@@ -12,13 +12,14 @@ import os
 import urllib.request
 
 FONT_PATH = "/tmp/NanumGothic.ttf"
-FONT_URL = "https://github.com/naver/nanumfont/blob/master/TTF/NanumGothic.ttf?raw=true"
+FONT_URL = "https://github.com/naver/nanumfont/raw/master/TTF/NanumGothic.ttf"
 
 if not os.path.exists(FONT_PATH):
     urllib.request.urlretrieve(FONT_URL, FONT_PATH)
 
 plt.rcParams['font.family'] = fm.FontProperties(fname=FONT_PATH).get_name()
 plt.rcParams['axes.unicode_minus'] = False  # 마이너스 깨짐 방지
+
 
 st.set_page_config(page_title="서울시 재비산먼지 분석", layout="wide")
 st.title("🚧 서울시 재비산먼지 분석 대시보드")
