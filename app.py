@@ -3,11 +3,12 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
 
+# Streamlit config
 st.set_page_config(page_title="Seoul Re-suspended Dust Dashboard", layout="wide")
 st.title("🚧 Seoul Re-suspended Dust Analysis Dashboard")
 st.markdown("---")
 
-# 📈 Pattern 1: Hourly Average Traffic Volume
+# 📈 Pattern 1: Hourly average traffic
 st.subheader("📈 Pattern 1: Hourly Average Traffic Volume")
 pattern1 = pd.read_csv("streamlit_data/pattern1_avg_traffic_by_hour.csv", encoding="utf-8-sig")
 pattern1["hour_num"] = pattern1["hour"].str.extract(r'(\d+)').astype(int)
@@ -21,19 +22,16 @@ ax1.set_ylabel("Average Traffic")
 st.dataframe(pattern1[["hour", "avg_traffic"]])
 st.pyplot(fig1)
 
-# 🚛 Pattern 2: Heavy Traffic vs Dust
+# 🚛 Pattern 2: Heavy traffic vs dust
 st.subheader("🚛 Pattern 2: Heavy Traffic vs Dust")
 pattern2 = pd.read_csv("streamlit_data/pattern2_traffic_vs_dust.csv", encoding="utf-8-sig")
 
+# Replace Korean district names with English
 district_map = {
-    "영등포구": "Yeongdeungpo",
-    "강남구": "Gangnam",
-    "강서구": "Gangseo",
-    "동작구": "Dongjak",
-    "마포구": "Mapo",
-    "송파구": "Songpa"
+    "영등포구": "Yeongdeungpo", "강남구": "Gangnam", "강서구": "Gangseo",
+    "동작구": "Dongjak", "마포구": "Mapo", "송파구": "Songpa"
 }
-pattern2["district_name"] = pattern2["district_name"].map(district_map)
+pattern2["district_name"] = pattern2["district_name"].replace(district_map)
 
 st.dataframe(pattern2)
 
@@ -44,19 +42,27 @@ ax2.set_xlabel("Average Heavy Traffic")
 ax2.set_ylabel("Average Dust")
 st.pyplot(fig2)
 
-# 🚦 Pattern 3: Traffic, Dust & Policy Type Analysis
+# 🚦 Pattern 3: Traffic, dust, and policy types
 st.subheader("🚦 Pattern 3: Traffic, Dust & Policy Type Analysis")
 pattern3 = pd.read_csv("streamlit_data/pattern3_dust_traffic_policy.csv", encoding="utf-8-sig")
 
-pattern3["district_name"] = pattern3["district_name"].map(district_map)
+# Apply English district names
+pattern3["district_name"] = pattern3["district_name"].replace(district_map)
 
-policy_type_map = {
-    "벽면녹화, 친환경보일러 교체(일부–선정결과없음)": "Green Wall & Boiler",
-    "미세먼지 차단 방진시설법, 벽녹화 경고표지": "Dust Barrier & Sign",
-    "기타, 녹지 확보, 벽면녹화, 친환경보일러, 쿨링포그": "Etc (CoolingFog, GreenSpace)",
-    "차량진입제한기기, 분사형 경고표지, 나대지 녹화, 미세먼지 저감살포, 미세먼지 저감숲, 미세먼지 차단 숲형커튼, 미세먼지 차단 필터기스톤, 벽면녹화": "Vehicle Limit & Sprayers"
-}
-pattern3.replace({'policy_types': policy_type_map}, inplace=True)
+# Categorize policy types based on content
+def categorize_policy(text):
+    if "벽면녹화" in text or "보일러" in text:
+        return "Green Wall & Boiler"
+    elif "방진시설" in text or "경고표지" in text:
+        return "Dust Barrier & Sign"
+    elif "쿨링포그" in text or "녹지" in text:
+        return "Etc (CoolingFog, GreenSpace)"
+    elif "차량진입" in text or "저감" in text or "필터" in text:
+        return "Vehicle Limit & Sprayers"
+    else:
+        return "Other"
+
+pattern3["policy_types"] = pattern3["policy_types"].apply(categorize_policy)
 
 st.dataframe(pattern3)
 
@@ -76,14 +82,17 @@ ax3.set_ylabel("Average Dust")
 ax3.legend(bbox_to_anchor=(1.05, 1), loc='upper left')
 st.pyplot(fig3)
 
-# 🏗️ Pattern 5: Policy Implementation vs Dust & Land Use
+# 🏗️ Pattern 5: Policy implementation vs dust
 st.subheader("🏗️ Pattern 5: Policy Implementation vs Dust & Land Use")
 pattern5 = pd.read_csv("streamlit_data/pattern5_policy_vs_dust.csv", encoding="utf-8-sig")
-pattern5["district_name"] = pattern5["district_name"].map(district_map)
+pattern5["district_name"] = pattern5["district_name"].replace(district_map)
+
+# Translate policy_status
 pattern5["policy_status"] = pattern5["policy_status"].replace({
-    "친환경보일러 교체 시행": "Implemented",
+    "정책시행": "Implemented",
     "미시행": "Not Implemented"
 })
+
 st.dataframe(pattern5)
 
 col1, col2 = st.columns(2)
@@ -111,10 +120,11 @@ ax6.set_xlabel("Garage Area")
 ax6.set_ylabel("Average Dust")
 st.pyplot(fig6)
 
-# 👥 Pattern 6: Population vs Dust
+# 👥 Pattern 6: Population vs dust
 st.subheader("👥 Pattern 6: Population vs Dust")
 pattern6 = pd.read_csv("streamlit_data/pattern6_population_vs_dust.csv", encoding="utf-8-sig")
-pattern6["district_name"] = pattern6["district_name"].map(district_map)
+pattern6["district_name"] = pattern6["district_name"].replace(district_map)
+
 st.dataframe(pattern6)
 
 fig7, ax7 = plt.subplots(figsize=(6, 5))
