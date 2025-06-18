@@ -2,16 +2,14 @@ import streamlit as st
 import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
-import os
 
-# Streamlit settings
-st.set_page_config(page_title="Seoul Resuspended Dust Dashboard", layout="wide")
-st.title("🚧 Seoul Resuspended Dust Analysis Dashboard")
+st.set_page_config(page_title="Seoul Dust Dashboard", layout="wide")
+st.title("🚧 Seoul Re-suspended Dust Analysis Dashboard")
 st.markdown("---")
 
-# 📈 Pattern 1: Average Traffic by Hour
+# Pattern 1: Hourly Traffic
 st.subheader("📈 Pattern 1: Average Traffic by Hour")
-pattern1 = pd.read_csv("streamlit_data/pattern1_avg_traffic_by_hour.csv", encoding="utf-8-sig")
+pattern1 = pd.read_csv("streamlit_data/pattern1_avg_traffic_by_hour.csv")
 pattern1["hour_num"] = pattern1["hour"].str.extract(r'(\d+)').astype(int)
 pattern1 = pattern1.sort_values("hour_num")
 
@@ -25,9 +23,9 @@ ax1.tick_params(axis='x', rotation=0)
 st.dataframe(pattern1[["hour", "avg_traffic"]])
 st.pyplot(fig1)
 
-# 🚛 Pattern 2: Heavy Traffic vs Dust
-st.subheader("🚛 Pattern 2: Heavy Traffic vs Resuspended Dust")
-pattern2 = pd.read_csv("streamlit_data/pattern2_traffic_vs_dust.csv", encoding="utf-8-sig")
+# Pattern 2: Traffic vs Dust
+st.subheader("🚛 Pattern 2: Heavy Traffic vs Dust Concentration")
+pattern2 = pd.read_csv("streamlit_data/pattern2_traffic_vs_dust.csv")
 st.dataframe(pattern2)
 
 fig2, ax2 = plt.subplots(figsize=(6, 5))
@@ -35,9 +33,9 @@ sns.scatterplot(data=pattern2, x="avg_heavy_traffic", y="avg_dust", hue="distric
 ax2.set_title("Heavy Traffic vs Dust")
 st.pyplot(fig2)
 
-# 🚦 Pattern 3: Traffic, Dust, and Policy Type
-st.subheader("🚦 Pattern 3: Traffic, Dust, and Policy Type")
-pattern3 = pd.read_csv("streamlit_data/pattern3_dust_traffic_policy.csv", encoding="utf-8-sig")
+# Pattern 3: Traffic, Dust, and Policy Types
+st.subheader("🚦 Pattern 3: Traffic, Dust, and Policy Types")
+pattern3 = pd.read_csv("streamlit_data/pattern3_dust_traffic_policy.csv")
 st.dataframe(pattern3)
 
 fig3, ax3 = plt.subplots(figsize=(8, 5))
@@ -54,9 +52,9 @@ ax3.set_title("Traffic vs Dust by Policy Type")
 ax3.legend(bbox_to_anchor=(1.05, 1), loc='upper left')
 st.pyplot(fig3)
 
-# 🏗️ Pattern 5: Policy Status, Road & Garage Area
-st.subheader("🏗️ Pattern 5: Policy Status, Land Use and Dust")
-pattern5 = pd.read_csv("streamlit_data/pattern5_policy_vs_dust.csv", encoding="utf-8-sig")
+# Pattern 5: Policy Status and Land Use
+st.subheader("🏗️ Pattern 5: Policy Status, Dust, and Land Use")
+pattern5 = pd.read_csv("streamlit_data/pattern5_policy_vs_dust.csv")
 st.dataframe(pattern5)
 
 col1, col2 = st.columns(2)
@@ -78,9 +76,9 @@ sns.scatterplot(data=pattern5, x="garage_area", y="avg_dust", hue="district_name
 ax6.set_title("Garage Area vs Dust")
 st.pyplot(fig6)
 
-# 👥 Pattern 6: Population vs Dust
-st.subheader("👥 Pattern 6: Population vs Resuspended Dust")
-pattern6 = pd.read_csv("streamlit_data/pattern6_population_vs_dust.csv", encoding="utf-8-sig")
+# Pattern 6: Population vs Dust
+st.subheader("👥 Pattern 6: Population vs Dust")
+pattern6 = pd.read_csv("streamlit_data/pattern6_population_vs_dust.csv")
 st.dataframe(pattern6)
 
 fig7, ax7 = plt.subplots(figsize=(6, 5))
@@ -89,4 +87,4 @@ ax7.set_title("Population vs Dust")
 st.pyplot(fig7)
 
 st.markdown("---")
-st.info("This analysis is based on open data from Seoul Metropolitan Government (2024).")
+st.info("This analysis is based on public data from the Seoul Metropolitan Government (2024).")
