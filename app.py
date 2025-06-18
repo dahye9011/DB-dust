@@ -3,9 +3,22 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
 
-# 🔧 한글 폰트 설정 (macOS용)
-plt.rcParams['font.family'] = 'AppleGothic'
-plt.rcParams['axes.unicode_minus'] = False
+import matplotlib.pyplot as plt
+import matplotlib.font_manager as fm
+import seaborn as sns
+
+# ✅ NanumGothic 폰트 설치 후 적용
+import os
+import urllib.request
+
+FONT_PATH = "/tmp/NanumGothic.ttf"
+FONT_URL = "https://github.com/naver/nanumfont/blob/master/TTF/NanumGothic.ttf?raw=true"
+
+if not os.path.exists(FONT_PATH):
+    urllib.request.urlretrieve(FONT_URL, FONT_PATH)
+
+plt.rcParams['font.family'] = fm.FontProperties(fname=FONT_PATH).get_name()
+plt.rcParams['axes.unicode_minus'] = False  # 마이너스 깨짐 방지
 
 st.set_page_config(page_title="서울시 재비산먼지 분석", layout="wide")
 st.title("🚧 서울시 재비산먼지 분석 대시보드")
