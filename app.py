@@ -26,7 +26,6 @@ st.pyplot(fig1)
 st.subheader("🚛 Pattern 2: Heavy Traffic vs Dust")
 pattern2 = pd.read_csv("streamlit_data/pattern2_traffic_vs_dust.csv", encoding="utf-8-sig")
 
-# Replace Korean district names with English
 district_map = {
     "영등포구": "Yeongdeungpo", "강남구": "Gangnam", "강서구": "Gangseo",
     "동작구": "Dongjak", "마포구": "Mapo", "송파구": "Songpa"
@@ -45,11 +44,8 @@ st.pyplot(fig2)
 # 🚦 Pattern 3: Traffic, dust, and policy types
 st.subheader("🚦 Pattern 3: Traffic, Dust & Policy Type Analysis")
 pattern3 = pd.read_csv("streamlit_data/pattern3_dust_traffic_policy.csv", encoding="utf-8-sig")
-
-# Apply English district names
 pattern3["district_name"] = pattern3["district_name"].replace(district_map)
 
-# Categorize policy types based on content
 def categorize_policy(text):
     if "벽면녹화" in text or "보일러" in text:
         return "Green Wall & Boiler"
@@ -63,7 +59,6 @@ def categorize_policy(text):
         return "Other"
 
 pattern3["policy_types"] = pattern3["policy_types"].apply(categorize_policy)
-
 st.dataframe(pattern3)
 
 fig3, ax3 = plt.subplots(figsize=(8, 5))
@@ -87,10 +82,9 @@ st.subheader("🏗️ Pattern 5: Policy Implementation vs Dust & Land Use")
 pattern5 = pd.read_csv("streamlit_data/pattern5_policy_vs_dust.csv", encoding="utf-8-sig")
 pattern5["district_name"] = pattern5["district_name"].replace(district_map)
 
-# Translate policy_status
 pattern5["policy_status"] = pattern5["policy_status"].replace({
-    "정책시행": "Implemented",
-    "Not Implemented": "Not Implemented"
+    "친환경보일러 교체 시행": "Implemented",
+    "미시행": "Not Implemented"
 })
 
 st.dataframe(pattern5)
@@ -103,6 +97,7 @@ with col1:
     ax4.set_title("Dust by Policy Status")
     ax4.set_xlabel("District")
     ax4.set_ylabel("Average Dust")
+    ax4.legend(title="Policy Status", bbox_to_anchor=(1.05, 1), loc="upper left")
     st.pyplot(fig4)
 
 with col2:
